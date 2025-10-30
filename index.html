@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Kind Boss – Starter Kit</title>
+  <meta name="description" content="Get the 24‑Hour Ranking Starter Kit by The Kind Boss | Michelle Brooks." />
+  <style>
+    :root { --bg:#0f172a; --panel:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+           background: radial-gradient(1200px 600px at 70% -10%, #1f2937, #0b1220) fixed; color:var(--text); }
+    .wrap { max-width: 720px; margin: 7vh auto; padding: 24px; }
+    .card { background: rgba(17,24,39,.85); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 28px; }
+    h1 { font-size: clamp(28px, 3.5vw, 40px); margin:0 0 8px; line-height: 1.15; }
+    p.lead { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+    form { margin-top: 16px; display: grid; gap: 12px; }
+    label { font-size: 14px; color: var(--muted); display: block; margin-bottom: 6px; }
+    input[type="text"], input[type="email"] {
+      width: 100%; padding: 14px 12px; border-radius: 10px; border: 1px solid #243044; background: #0b1220; color: var(--text);
+    }
+    button { background: var(--accent); color: #0b1220; border: 0; padding: 14px 16px; border-radius: 10px;
+             font-weight: 700; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .fine { font-size: 12px; color: var(--muted); margin-top: 8px; }
+    .brand { display:flex; align-items:center; gap:10px; margin-bottom: 14px; opacity: .9;}
+    .brand img { width: 36px; height: 36px; border-radius: 50%; }
+    .foot { margin-top: 14px; font-size:12px; color:var(--muted); }
+    .center { text-align:center; }
+  </style>
+
+  <!-- Optional: GA4. Remove if you’re not using GA4. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="brand">
+        <img alt="The Kind Boss" src="https://dummyimage.com/72x72/1f2937/e5e7eb.png&text=KB" />
+        <div>
+          <div style="font-weight:700">The Kind Boss</div>
+          <div style="font-size:12px; color:var(--muted)">Michelle Brooks</div>
+        </div>
+      </div>
+
+      <h1>Get the 24‑Hour Ranking Starter Kit</h1>
+      <p class="lead">The fast, copy‑ready checklist and templates referenced in your video. Drop your best email below and I’ll send it right away.</p>
+
+      <!-- GETRESPONSE PLAIN HTML FORM -->
+      <!-- Docs: action, campaign_token, thankyou_url, start_day, and custom_* fields -->
+      <form id="gr-form" action="https://app.getresponse.com/add_subscriber.html" method="post" accept-charset="utf-8" novalidate>
+        <div>
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" />
+        </div>
+        <div>
+          <label for="email">Email <span aria-hidden="true">*</span></label>
+          <input id="email" name="email" type="email" placeholder="you@domain.com" autocomplete="email" required />
+        </div>
+
+        <!-- REQUIRED: your list token -->
+        <input type="hidden" name="campaign_token" value="YOUR_GETRESPONSE_CAMPAIGN_TOKEN" />
+        <!-- Start autoresponder at day 0 -->
+        <input type="hidden" name="start_day" value="0" />
+        <!-- Redirect straight to your Google Doc (ensure sharing is 'Anyone with link: Viewer') -->
+        <input type="hidden" name="thankyou_url" value="https://docs.google.com/document/d/1ktMlRgSfgDYHxcMANCyU0WHo82QkKaJV8QsEw8Gbc1w/edit?usp=sharing" />
+        <!-- If you prefer YOUR OWN tracked thank-you page, swap the line above for: -->
+        <!-- <input type="hidden" name="thankyou_url" value="https://YOURDOMAIN.vercel.app/thanks.html" /> -->
+        <!-- If you DO use your own thank-you page, you may also enable data forwarding (not needed for Google Docs): -->
+        <!-- <input type="hidden" name="forward_data" value="post" /> -->
+
+        <!-- UTM + context → map to GR custom fields (create them as TEXT fields first) -->
+        <input type="hidden" name="custom_utm_source" />
+        <input type="hidden" name="custom_utm_medium" />
+        <input type="hidden" name="custom_utm_campaign" />
+        <input type="hidden" name="custom_utm_content" />
+        <input type="hidden" name="custom_utm_term" />
+        <input type="hidden" name="custom_utm_id" />
+        <input type="hidden" name="custom_referrer" />
+        <input type="hidden" name="custom_landing_url" />
+
+        <!-- Simple honeypot -->
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px;" />
+
+        <button id="submitBtn" type="submit">Send me the Starter Kit</button>
+        <div class="fine">By submitting, you agree to receive helpful emails about the Real Time Reviews series and related resources. Unsubscribe anytime.</div>
+      </form>
+
+      <div class="foot center">© The Kind Boss | Michelle Brooks</div>
+    </div>
+  </div>
+
+  <script>
+    // --- Basic UTM capture + persistence ---
+    (function(){
+      const params = new URLSearchParams(location.search);
+      const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id'];
+      // Pull any present UTMs; if missing, fall back to localStorage; then persist
+      keys.forEach(k => {
+        const v = params.get(k) || localStorage.getItem(k) || '';
+        if (v) {
+          localStorage.setItem(k, v);
+          const input = document.querySelector('input[name="custom_'+k+'"]');
+          if (input) input.value = v;
+        }
+      });
+      // Capture referrer + landing URL
+      const r = document.querySelector('input[name="custom_referrer"]');
+      if (r) r.value = document.referrer || '';
+      const l = document.querySelector('input[name="custom_landing_url"]');
+      if (l) l.value = location.href;
+
+      // Minimal client validation + GA event on submit
+      const form = document.getElementById('gr-form');
+      const btn  = document.getElementById('submitBtn');
+      form.addEventListener('submit', function(e){
+        if (form.website && form.website.value) { e.preventDefault(); return; } // honeypot tripped
+        if (!form.email.value) { e.preventDefault(); alert('Please enter your email.'); return; }
+        try {
+          gtag('event', 'sign_up', {
+            method: 'GetResponse',
+            items: [{ item_name: 'Starter Kit' }],
+          });
+        } catch(e){}
+        btn.disabled = true;
+      });
+    })();
+  </script>
+</body>
+</html>
