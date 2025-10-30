@@ -28,15 +28,6 @@
     .foot { margin-top: 14px; font-size:12px; color:var(--muted); }
     .center { text-align:center; }
   </style>
-
-  <!-- Optional: GA4. Remove if you’re not using GA4. -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
 </head>
 <body>
   <div class="wrap">
@@ -53,7 +44,6 @@
       <p class="lead">The fast, copy‑ready checklist and templates referenced in your video. Drop your best email below and I’ll send it right away.</p>
 
       <!-- GETRESPONSE PLAIN HTML FORM -->
-      <!-- Docs: action, campaign_token, thankyou_url, start_day, and custom_* fields -->
       <form id="gr-form" action="https://app.getresponse.com/add_subscriber.html" method="post" accept-charset="utf-8" novalidate>
         <div>
           <label for="name">Name</label>
@@ -65,17 +55,15 @@
         </div>
 
         <!-- REQUIRED: your list token -->
-        <input type="hidden" name="campaign_token" value="YOUR_GETRESPONSE_CAMPAIGN_TOKEN" />
-        <!-- Start autoresponder at day 0 -->
+        <input type="hidden" name="campaign_token" value="LHxgI" />
+        <!-- If you want everyone to enter the list’s default autoresponder series, keep start_day=0.
+             If you plan to route different welcome series via Automation (recommended below), remove start_day. -->
         <input type="hidden" name="start_day" value="0" />
-        <!-- Redirect straight to your Google Doc (ensure sharing is 'Anyone with link: Viewer') -->
-        <input type="hidden" name="thankyou_url" value="https://docs.google.com/document/d/1ktMlRgSfgDYHxcMANCyU0WHo82QkKaJV8QsEw8Gbc1w/edit?usp=sharing" />
-        <!-- If you prefer YOUR OWN tracked thank-you page, swap the line above for: -->
-        <!-- <input type="hidden" name="thankyou_url" value="https://YOURDOMAIN.vercel.app/thanks.html" /> -->
-        <!-- If you DO use your own thank-you page, you may also enable data forwarding (not needed for Google Docs): -->
-        <!-- <input type="hidden" name="forward_data" value="post" /> -->
 
-        <!-- UTM + context → map to GR custom fields (create them as TEXT fields first) -->
+        <!-- Send to your own thank-you page for tracking -->
+        <input type="hidden" name="thankyou_url" value="https://24-hour-ranking-system.vercel.app/thanks.html" />
+
+        <!-- UTM + context → GetResponse custom fields -->
         <input type="hidden" name="custom_utm_source" />
         <input type="hidden" name="custom_utm_medium" />
         <input type="hidden" name="custom_utm_campaign" />
@@ -89,7 +77,7 @@
         <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px;" />
 
         <button id="submitBtn" type="submit">Send me the Starter Kit</button>
-        <div class="fine">By submitting, you agree to receive helpful emails about the Real Time Reviews series and related resources. Unsubscribe anytime.</div>
+        <div class="fine">By submitting, you agree to receive helpful emails about Real Time Reviews and related resources. Unsubscribe anytime.</div>
       </form>
 
       <div class="foot center">© The Kind Boss | Michelle Brooks</div>
@@ -97,11 +85,10 @@
   </div>
 
   <script>
-    // --- Basic UTM capture + persistence ---
+    // --- UTM capture + persistence ---
     (function(){
       const params = new URLSearchParams(location.search);
       const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id'];
-      // Pull any present UTMs; if missing, fall back to localStorage; then persist
       keys.forEach(k => {
         const v = params.get(k) || localStorage.getItem(k) || '';
         if (v) {
@@ -110,24 +97,19 @@
           if (input) input.value = v;
         }
       });
-      // Capture referrer + landing URL
+      // Referrer + landing URL
       const r = document.querySelector('input[name="custom_referrer"]');
       if (r) r.value = document.referrer || '';
       const l = document.querySelector('input[name="custom_landing_url"]');
       if (l) l.value = location.href;
 
-      // Minimal client validation + GA event on submit
+      // Minimal validate + GA event on submit
       const form = document.getElementById('gr-form');
       const btn  = document.getElementById('submitBtn');
       form.addEventListener('submit', function(e){
-        if (form.website && form.website.value) { e.preventDefault(); return; } // honeypot tripped
+        if (form.website && form.website.value) { e.preventDefault(); return; } // honeypot
         if (!form.email.value) { e.preventDefault(); alert('Please enter your email.'); return; }
-        try {
-          gtag('event', 'sign_up', {
-            method: 'GetResponse',
-            items: [{ item_name: 'Starter Kit' }],
-          });
-        } catch(e){}
+        try { gtag('event', 'sign_up', { method: 'GetResponse', items: [{ item_name: 'Starter Kit' }]}); } catch(e){}
         btn.disabled = true;
       });
     })();
